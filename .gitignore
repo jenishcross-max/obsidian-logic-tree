@@ -1,0 +1,5 @@
+node_modules/
+# Personal design notes, not part of the public plugin
+docs/2.4-bp-fric.md
+docs/2.5-trainer.md
+docs/plans/

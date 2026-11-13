@@ -1,0 +1,1581 @@
+.lt-root {
+  --lt-yellow: #ffdf4f;
+  --lt-yellow-line: #d9ac00;
+  --lt-blue: #a9d3ff;
+  --lt-blue-line: #2f78c4;
+  --lt-blue-edge: #1f5f9f;
+  --lt-green: #1f9d63;
+  --lt-ink: #1d1a0f;
+  position: relative;
+  height: 100%;
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+.theme-dark .lt-root {
+  --lt-yellow-line: #f2c800;
+  --lt-blue-line: #7dbdff;
+}
+
+/* Схема */
+
+.lt-viewport {
+  touch-action: none;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  overflow: clip;
+  background: var(--background-primary);
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.lt-stage,
+.lt-layer,
+.lt-labels {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.lt-stage {
+  transform-origin: 0 0;
+}
+
+.lt-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.lt-line {
+  fill: none;
+  stroke-width: 3;
+  stroke-linecap: square;
+}
+
+.lt-line.lt-own {
+  stroke: var(--lt-yellow-line);
+}
+
+.lt-line.lt-opp {
+  stroke: var(--lt-blue-line);
+}
+
+.lt-head.lt-own {
+  fill: var(--lt-yellow-line);
+}
+
+.lt-head.lt-opp {
+  fill: var(--lt-blue-line);
+}
+
+.lt-svg .is-dim {
+  opacity: 0.28;
+}
+
+/* Блоки */
+
+.lt-node {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: 160px;
+  min-height: 44px;
+  padding: 8px 9px;
+  border: 1.5px solid transparent;
+  background: var(--lt-yellow);
+  color: var(--lt-ink);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.25;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+  animation: lt-pop 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes lt-pop {
+  from {
+    opacity: 0.4;
+    transform: scale(0.92);
+  }
+}
+
+.lt-node.lt-short {
+  font-size: 16px;
+}
+
+/* Слово, которое не помещается в строку обычным шрифтом, пишется мельче, а не рвётся посреди */
+.lt-node.lt-small {
+  font-size: 11px;
+}
+
+/* Длинная резолюция наверху: блок вдвое шире, иначе он превращается в высокий столб */
+.lt-node.lt-wide {
+  width: 320px;
+}
+
+.lt-node.lt-opp {
+  border: 1.5px dashed var(--lt-blue-edge);
+  background: var(--lt-blue);
+}
+
+.lt-node.is-selected {
+  outline: 3px solid var(--interactive-accent);
+  outline-offset: 2px;
+}
+
+.lt-node.is-marked,
+.lt-node.is-drop-child {
+  outline: 3px solid var(--lt-green);
+  outline-offset: 2px;
+}
+
+.lt-node.is-dim {
+  opacity: 0.3;
+}
+
+.lt-node.is-editing {
+  visibility: hidden;
+}
+
+.lt-node.is-dragging {
+  opacity: 0.35;
+}
+
+.lt-node.is-drop-before::before,
+.lt-node.is-drop-after::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  bottom: -6px;
+  width: 5px;
+  border-radius: 3px;
+  background: var(--lt-green);
+}
+
+.lt-node.is-drop-before::before {
+  left: -11px;
+}
+
+.lt-node.is-drop-after::before {
+  right: -11px;
+}
+
+.lt-check {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--lt-green);
+  color: #fff;
+  --icon-size: 14px;
+}
+
+.lt-node.is-marked .lt-check {
+  display: flex;
+}
+
+/* Звенья FRIC на своём аргументе: заполненная буква яркая, пустая приглушена */
+.lt-ric {
+  position: absolute;
+  top: -9px;
+  left: 6px;
+  display: flex;
+  gap: 1px;
+  padding: 1px 3px;
+  border-radius: 5px;
+  background: var(--lt-ink);
+  pointer-events: none;
+}
+
+.lt-ric-letter {
+  width: 13px;
+  color: #8a8470;
+  font-size: 10.5px;
+  font-weight: 800;
+  line-height: 15px;
+  text-align: center;
+}
+
+.lt-ric-letter.is-on {
+  color: var(--lt-yellow);
+}
+
+/* Заметка с планом речи: крупнее, чтобы читать с телефона во время речи */
+.markdown-preview-view.lt-speech,
+.markdown-source-view.lt-speech {
+  font-size: 1.15em;
+  line-height: 1.55;
+}
+
+.markdown-preview-view.lt-speech h3 {
+  margin-top: 1.1em;
+}
+
+/* Служебное свойство cssclasses не занимает первый экран плана */
+.lt-speech {
+  --metadata-display-reading: none;
+  --metadata-display-editing: none;
+}
+
+.lt-root button.lt-count {
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  height: 24px;
+  min-width: 36px;
+  padding: 0 8px;
+  border: none;
+  border-radius: 12px;
+  background: var(--lt-ink);
+  box-shadow: none;
+  color: var(--lt-yellow);
+  font-size: 13px;
+  font-weight: 700;
+  transform: translateX(-50%);
+}
+
+.lt-label {
+  position: absolute;
+  width: max-content;
+  max-width: 190px;
+  padding: 2px 6px;
+  background: var(--background-primary);
+  color: var(--text-normal);
+  font-size: 11.5px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  text-transform: uppercase;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+
+.lt-label.is-dim {
+  opacity: 0.3;
+}
+
+.lt-root textarea.lt-editor {
+  position: absolute;
+  z-index: 3;
+  box-sizing: border-box;
+  width: 160px;
+  min-height: 44px;
+  margin: 0;
+  padding: 10px;
+  overflow: hidden;
+  border: none;
+  border-radius: 0;
+  outline: 3px solid var(--interactive-accent);
+  outline-offset: 2px;
+  background: var(--lt-yellow);
+  box-shadow: none;
+  color: var(--lt-ink);
+  caret-color: var(--lt-ink);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.25;
+  text-transform: uppercase;
+  resize: none;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.lt-root textarea.lt-editor.lt-opp {
+  background: var(--lt-blue);
+}
+
+.lt-root textarea.lt-editor::placeholder {
+  color: rgba(29, 26, 15, 0.68);
+  font-weight: 500;
+  text-transform: none;
+}
+
+.lt-root textarea.lt-editor::selection {
+  background: rgba(29, 26, 15, 0.22);
+}
+
+/* Плюсы у выбранного блока: размер не зависит от масштаба схемы */
+
+.lt-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.lt-overlay.is-hidden {
+  display: none;
+}
+
+.lt-root button.lt-handle {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  margin: -19px 0 0 -19px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--interactive-accent);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28);
+  color: var(--text-on-accent);
+  pointer-events: auto;
+}
+
+.lt-root button.lt-handle::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+}
+
+.lt-root button.lt-handle[data-action="fold"] {
+  border: 1px solid var(--background-modifier-border);
+  background: var(--background-primary);
+  color: var(--text-normal);
+}
+
+.lt-overlay.lt-smooth .lt-handle {
+  transition: left 0.2s cubic-bezier(0.16, 1, 0.3, 1), top 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lt-ghost {
+  position: absolute;
+  z-index: 6;
+  display: none;
+  max-width: 170px;
+  padding: 8px 10px;
+  background: var(--lt-yellow);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+  color: var(--lt-ink);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.25;
+  text-transform: uppercase;
+  transform: translate(-50%, -100%);
+  pointer-events: none;
+}
+
+.lt-ghost.lt-opp {
+  background: var(--lt-blue);
+}
+
+/* Панели */
+
+.lt-dock,
+.lt-strip {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 8px;
+  background: var(--background-primary);
+  border-top: 1px solid var(--background-modifier-border);
+}
+
+.lt-dock {
+  padding-bottom: calc(6px + var(--safe-area-inset-bottom, 0px));
+}
+
+body:has(.workspace-leaf.mod-active .lt-root.lt-hide-nav) .mobile-navbar {
+  opacity: 0;
+  transform: translateY(calc(100% + 60px));
+  pointer-events: none;
+}
+
+@supports not selector(:has(a)) {
+  .lt-dock {
+    bottom: calc(var(--navbar-height, 0px) + var(--navbar-bottom-offset, 0px));
+  }
+}
+
+.lt-root button.lt-btn {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  height: 42px;
+  padding: 0 10px;
+  box-shadow: none;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.lt-root .lt-dock button.lt-btn {
+  flex: 1 1 auto;
+  padding: 0 6px;
+  background: var(--background-secondary);
+  color: var(--text-normal);
+  font-size: 13.5px;
+}
+
+.lt-root .lt-dock button.lt-btn.lt-primary {
+  background: var(--lt-yellow);
+  color: var(--lt-ink);
+}
+
+.lt-root button.lt-btn.lt-icon {
+  flex: 0 0 44px;
+  width: 44px;
+  padding: 0;
+}
+
+.lt-root button.lt-primary {
+  background: var(--lt-yellow);
+  color: var(--lt-ink);
+  font-weight: 700;
+}
+
+.lt-root button:disabled {
+  opacity: 0.4;
+}
+
+.lt-root button:focus-visible {
+  outline: 2px solid var(--interactive-accent);
+  outline-offset: 1px;
+}
+
+.lt-swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 5px;
+  border: 1px dashed var(--lt-blue-edge);
+  border-radius: 50%;
+  background: var(--lt-blue);
+}
+
+.lt-swatch.is-own {
+  border: 1px solid var(--lt-yellow-line);
+  background: var(--lt-yellow);
+}
+
+.lt-strip-chips {
+  display: flex;
+  flex: 1 1 auto;
+  gap: 6px;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.lt-strip-chips::-webkit-scrollbar {
+  display: none;
+}
+
+.lt-root button.lt-chip {
+  flex: none;
+  height: 34px;
+  padding: 0 11px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 17px;
+  background: var(--background-secondary);
+  box-shadow: none;
+  color: var(--text-normal);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.lt-root button.lt-chip.is-on {
+  border-color: var(--lt-yellow-line);
+  background: var(--lt-yellow);
+  color: var(--lt-ink);
+  font-weight: 700;
+}
+
+.lt-root button.lt-strip-side {
+  flex: none;
+  height: 34px;
+  padding: 0 12px;
+  border: 2px solid var(--lt-yellow-line);
+  border-radius: 17px;
+  background: var(--lt-yellow);
+  box-shadow: none;
+  color: var(--lt-ink);
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+.lt-root button.lt-strip-side.is-opp {
+  border: 2px dashed var(--lt-blue-edge);
+  background: var(--lt-blue);
+}
+
+.lt-root button.lt-strip-beside {
+  height: 34px;
+  margin-left: auto;
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+.lt-root input.lt-custom {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  height: 34px;
+  font-size: 16px;
+}
+
+.lt-pill {
+  position: absolute;
+  right: 10px;
+  bottom: calc(var(--navbar-height, 0px) + var(--navbar-bottom-offset, 0px) + 10px);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 26px;
+  background: var(--background-primary);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+}
+
+.lt-root .lt-pill button.lt-btn {
+  border-radius: 22px;
+  background: transparent;
+}
+
+.lt-root .lt-pill button.lt-btn.is-on {
+  color: var(--interactive-accent);
+}
+
+.lt-root .lt-pill button.lt-add {
+  gap: 4px;
+  padding: 0 14px 0 10px;
+  background: var(--lt-yellow);
+  color: var(--lt-ink);
+  font-weight: 700;
+}
+
+.lt-add-icon {
+  display: inline-flex;
+}
+
+/* Сообщения */
+
+.lt-hint {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  z-index: 5;
+  width: max-content;
+  max-width: calc(100% - 24px);
+  padding: 7px 12px;
+  border-radius: 16px;
+  background: var(--background-secondary);
+  color: var(--text-normal);
+  font-size: 13.5px;
+  text-align: center;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.lt-tip {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  left: 10px;
+  z-index: 5;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 8px 4px 8px 12px;
+  border-radius: 12px;
+  background: var(--background-secondary);
+  color: var(--text-normal);
+  font-size: 13.5px;
+  line-height: 1.35;
+}
+
+.lt-tip-text {
+  flex: 1 1 auto;
+  padding-top: 2px;
+}
+
+.lt-root button.lt-tip-close {
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--text-muted);
+}
+
+.lt-empty {
+  position: absolute;
+  top: 38%;
+  right: 28px;
+  left: 28px;
+  color: var(--text-muted);
+  font-size: 15px;
+  line-height: 1.4;
+  text-align: center;
+  pointer-events: none;
+}
+
+.lt-help {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  left: 12px;
+  z-index: 7;
+  max-height: calc(100% - 24px);
+  padding: 14px 16px;
+  overflow-y: auto;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 14px;
+  background: var(--background-primary);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
+  color: var(--text-normal);
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.lt-help-head {
+  position: sticky;
+  top: -14px;
+  display: flex;
+  align-items: center;
+  margin: -14px -8px 4px 0;
+  padding-top: 8px;
+  background: var(--background-primary);
+}
+
+.lt-help-title {
+  flex: 1 1 auto;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.lt-root .lt-help-head button.lt-help-close {
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.lt-help-list {
+  margin: 0 0 4px;
+  padding-left: 18px;
+  font-size: 14.5px;
+  line-height: 1.4;
+}
+
+.lt-help-list li {
+  margin-bottom: 7px;
+}
+
+/* Заголовки разделов разбора */
+
+.lt-node.lt-head {
+  border: 1.5px solid var(--lt-yellow-line);
+  background: var(--lt-ink);
+  color: var(--lt-yellow);
+}
+
+.lt-node.lt-head.lt-opp {
+  border: 1.5px dashed var(--lt-blue-line);
+  background: var(--lt-ink);
+  color: var(--lt-blue);
+}
+
+.lt-root .lt-head button.lt-count {
+  background: var(--lt-yellow);
+  color: var(--lt-ink);
+}
+
+.lt-label.lt-label-narrow {
+  max-width: 158px;
+}
+
+/* Панель выбора вопроса и разбор резолюции */
+
+.lt-qpanel,
+.lt-wizard {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 6;
+  box-sizing: border-box;
+  max-height: 72%;
+  padding: 8px 10px calc(10px + var(--safe-area-inset-bottom, 0px));
+  overflow-y: auto;
+  border-top: 1px solid var(--background-modifier-border);
+  background: var(--background-primary);
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.12);
+  color: var(--text-normal);
+}
+
+.lt-qhead,
+.lt-wiz-head {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-bottom: 6px;
+}
+
+.lt-qtitle {
+  flex: 1 1 auto;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.lt-root .lt-qhead button.lt-btn,
+.lt-root .lt-wiz-head button.lt-btn {
+  flex: 0 0 38px;
+  width: 38px;
+  height: 36px;
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.lt-qgrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.lt-root button.lt-qbtn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 44px;
+  padding: 0 10px;
+  overflow: hidden;
+  border: 1px solid var(--background-modifier-border);
+  background: var(--background-secondary);
+  box-shadow: none;
+  color: var(--text-normal);
+  font-size: 13.5px;
+  line-height: 1.15;
+  text-align: left;
+  white-space: normal;
+}
+
+.lt-root button.lt-qbtn.is-on,
+.lt-root button.lt-wiz-type.is-on {
+  border-color: var(--lt-yellow-line);
+  background: var(--lt-yellow);
+  color: var(--lt-ink);
+  font-weight: 700;
+}
+
+body:not(.is-mobile) .lt-qbtn[data-n]::before,
+body:not(.is-mobile) .lt-chip[data-n]::before {
+  content: attr(data-n);
+  display: inline-block;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-right: 7px;
+  border-radius: 4px;
+  background: var(--background-modifier-border);
+  color: var(--text-normal);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 18px;
+  text-align: center;
+}
+
+.lt-qfoot,
+.lt-wiz-form {
+  display: flex;
+  gap: 6px;
+  margin: 8px 0 0;
+}
+
+.lt-root input.lt-qcustom,
+.lt-root input.lt-wiz-input {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  height: 42px;
+  font-size: 16px;
+}
+
+.lt-root button.lt-wiz-next {
+  margin-left: auto;
+}
+
+.lt-wiz-count {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Счётчик добавленного показан в подсказке поля ввода, эта строка остаётся для экранного доступа */
+.lt-wiz-added {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Своя сторона в шапке разбора: по нажатию её можно сменить */
+.lt-root button.lt-wiz-side {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 3px;
+  height: 36px;
+  margin-left: 6px;
+  padding: 0 6px 0 10px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 18px;
+  background: var(--background-secondary);
+  box-shadow: none;
+  color: var(--text-normal);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.lt-wiz-gap {
+  flex: 1 1 auto;
+}
+
+/* Таймер 15 минут подготовки: цифры не прыгают, при отставании он жёлтый */
+.lt-wiz-timer {
+  flex: none;
+  margin-left: 6px;
+  padding: 0 7px;
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  line-height: 26px;
+}
+
+.lt-wiz-timer.is-late {
+  background: var(--lt-yellow);
+  color: var(--lt-ink);
+}
+
+.lt-wiz-pace {
+  margin-bottom: 6px;
+  padding: 5px 9px;
+  border-radius: 8px;
+  background: rgba(255, 223, 79, 0.32);
+  color: var(--text-normal);
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+/* Критерии сравнения: нажатие начинает ответ этим словом */
+.lt-wiz-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.lt-root button.lt-wiz-chip {
+  height: 34px;
+  padding: 0 11px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 17px;
+  background: var(--background-secondary);
+  box-shadow: none;
+  color: var(--text-normal);
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.lt-wiz-side-icon {
+  display: inline-flex;
+  color: var(--text-muted);
+}
+
+.lt-wiz-side-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Вкладки вида разбора */
+.lt-wiz-kinds {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 8px;
+  padding: 2px;
+  border-radius: 10px;
+  background: var(--background-secondary);
+}
+
+.lt-root button.lt-wiz-kind {
+  flex: 1 1 0;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  box-shadow: none;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.lt-root button.lt-wiz-kind.is-on {
+  background: var(--lt-yellow);
+  color: var(--lt-ink);
+}
+
+.lt-wiz-prompt {
+  margin-bottom: 3px;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.lt-wiz-hint {
+  color: var(--text-muted);
+  font-size: 13.5px;
+  line-height: 1.35;
+}
+
+.lt-wiz-types {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.lt-root button.lt-wiz-type {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 2px;
+  height: auto;
+  min-height: 52px;
+  padding: 7px 10px;
+  border: 1px solid var(--background-modifier-border);
+  background: var(--background-secondary);
+  box-shadow: none;
+  color: var(--text-normal);
+  text-align: left;
+  white-space: normal;
+}
+
+/* Нечётный последний вариант занимает всю строку: «Обе стороны», третий вид решения */
+.lt-root button.lt-wiz-type:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
+.lt-wiz-type-name {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.lt-wiz-type-lead {
+  font-size: 12px;
+  line-height: 1.2;
+  opacity: 0.78;
+}
+
+.lt-root button.lt-strip-all {
+  flex: 0 0 38px;
+  width: 38px;
+  height: 34px;
+}
+
+.lt-root button.lt-strip-analyze {
+  height: 34px;
+  margin-left: auto;
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+.lt-is-broken .lt-pill,
+.lt-is-broken .lt-dock,
+.lt-is-broken .lt-strip,
+.lt-is-broken .lt-qpanel,
+.lt-is-broken .lt-wizard {
+  display: none !important;
+}
+
+/* На ПК снизу справа лежит панель состояния Obsidian */
+body:not(.is-mobile) .lt-dock,
+body:not(.is-mobile) .lt-strip,
+body:not(.is-mobile) .lt-qpanel {
+  bottom: 28px;
+}
+
+body:not(.is-mobile) .lt-strip {
+  align-items: flex-start;
+}
+
+body:not(.is-mobile) .lt-strip-chips {
+  flex-wrap: wrap;
+  overflow: visible;
+}
+
+body:not(.is-mobile) .lt-qgrid {
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+}
+
+body:not(.is-mobile) .lt-wizard {
+  right: 14px;
+  bottom: 40px;
+  left: auto;
+  width: 430px;
+  max-width: calc(100% - 28px);
+  padding-bottom: 10px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 14px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+}
+
+body:not(.is-mobile) .lt-pill {
+  bottom: 38px;
+}
+
+@media (hover: hover) {
+  .lt-node:hover {
+    filter: brightness(0.97);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lt-node {
+    animation: none;
+  }
+
+  .lt-overlay.lt-smooth .lt-handle {
+    transition: none;
+  }
+}
+
+/* Тренажёр: вкладка с подготовкой и речью */
+
+.lt-root.lt-train {
+  display: flex;
+  flex-direction: column;
+  background: var(--background-primary);
+  color: var(--text-normal);
+}
+
+.lt-tr-head {
+  flex: none;
+  padding: 8px 12px 6px;
+  border-bottom: 1px solid var(--background-modifier-border);
+  background: var(--background-primary);
+}
+
+.lt-tr-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lt-tr-clock {
+  flex: none;
+  min-width: 74px;
+  padding: 2px 8px;
+  border-radius: 8px;
+  background: var(--background-secondary);
+  font-size: 26px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  line-height: 38px;
+  text-align: center;
+}
+
+.lt-tr-clock.is-late {
+  background: var(--lt-yellow);
+  color: var(--lt-ink);
+}
+
+.lt-tr-info {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.lt-tr-motion-line {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.25;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.lt-tr-sub {
+  color: var(--text-muted);
+  font-size: 12.5px;
+}
+
+.lt-tr-tabs {
+  display: flex;
+  gap: 2px;
+  margin-top: 8px;
+  padding: 2px;
+  border-radius: 10px;
+  background: var(--background-secondary);
+}
+
+.lt-root button.lt-tr-tab {
+  position: relative;
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  min-width: 0;
+  height: 46px;
+  padding: 0 4px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  box-shadow: none;
+  color: var(--text-muted);
+}
+
+.lt-root button.lt-tr-tab.is-on {
+  background: var(--lt-yellow);
+  color: var(--lt-ink);
+}
+
+/* Вкладка, к которой пора перейти по времени */
+.lt-root button.lt-tr-tab.is-due::after {
+  content: "";
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--lt-yellow-line);
+}
+
+.lt-tr-tabspan {
+  font-size: 11.5px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.lt-tr-tabname {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 13.5px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lt-root button.lt-tr-pace {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: 6px;
+  padding: 7px 10px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 223, 79, 0.32);
+  box-shadow: none;
+  color: var(--text-normal);
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: left;
+  white-space: normal;
+}
+
+.lt-tr-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 12px 12px calc(24px + var(--safe-area-inset-bottom, 0px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.lt-tr-title {
+  margin-bottom: 6px;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.lt-tr-lead {
+  margin-bottom: 14px;
+  color: var(--text-muted);
+  font-size: 14.5px;
+  line-height: 1.4;
+}
+
+.lt-tr-label {
+  display: block;
+  margin: 12px 0 5px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.lt-tr-fieldwrap {
+  display: block;
+}
+
+.lt-tr-fieldwrap:first-child .lt-tr-label {
+  margin-top: 0;
+}
+
+.lt-root textarea.lt-tr-field {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  padding: 9px 10px;
+  overflow: hidden;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+  background: var(--background-primary);
+  color: var(--text-normal);
+  font-size: 16px;
+  line-height: 1.4;
+  resize: none;
+}
+
+.lt-root textarea.lt-tr-field:focus {
+  border-color: var(--lt-yellow-line);
+  box-shadow: 0 0 0 2px rgba(255, 223, 79, 0.45);
+}
+
+.lt-root textarea.lt-tr-motion {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.lt-root button.lt-tr-again {
+  gap: 6px;
+  margin-top: 8px;
+  background: var(--background-secondary);
+}
+
+.lt-tr-icon {
+  display: inline-flex;
+}
+
+.lt-tr-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.lt-tr-note {
+  margin-top: 8px;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.lt-tr-pos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.lt-root button.lt-tr-posbtn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 1px;
+  height: auto;
+  min-height: 54px;
+  padding: 7px 10px;
+  border: 1px solid var(--background-modifier-border);
+  background: var(--background-secondary);
+  box-shadow: none;
+  color: var(--text-normal);
+  text-align: left;
+  white-space: normal;
+}
+
+.lt-root button.lt-tr-posbtn.is-on {
+  border-color: var(--lt-yellow-line);
+  background: var(--lt-yellow);
+  color: var(--lt-ink);
+}
+
+.lt-tr-posshort {
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.lt-tr-posname {
+  font-size: 12px;
+  line-height: 1.2;
+  opacity: 0.8;
+}
+
+.lt-tr-foot {
+  display: flex;
+  flex: none;
+  gap: 8px;
+  padding: 8px 12px calc(8px + var(--safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--background-modifier-border);
+  background: var(--background-primary);
+}
+
+.lt-root .lt-tr-foot button.lt-btn {
+  flex: 1 1 0;
+  height: 48px;
+  font-size: 15px;
+}
+
+.lt-root .lt-tr-foot button.lt-tr-open {
+  background: var(--background-secondary);
+}
+
+.lt-root button.lt-tr-next,
+.lt-root button.lt-tr-back {
+  width: 100%;
+  height: 48px;
+  margin-top: 18px;
+  font-size: 15px;
+}
+
+.lt-root button.lt-tr-back {
+  background: var(--background-secondary);
+}
+
+/* Лист речи при подготовке */
+
+.lt-tr-part {
+  margin-bottom: 12px;
+  padding: 10px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 10px;
+}
+
+.lt-tr-parthead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lt-tr-mark {
+  flex: none;
+  padding: 0 6px;
+  border-radius: 5px;
+  background: var(--lt-ink);
+  color: var(--lt-yellow);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  line-height: 22px;
+}
+
+.theme-dark .lt-tr-mark {
+  background: var(--lt-yellow);
+  color: var(--lt-ink);
+}
+
+.lt-tr-parttitle {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.lt-tr-hint {
+  margin: 4px 0 8px;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.lt-tr-part .lt-tr-label {
+  margin: 10px 0 4px;
+  font-size: 13.5px;
+}
+
+.lt-tr-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.lt-root button.lt-tr-chip {
+  max-width: 100%;
+  height: 34px;
+  padding: 0 11px;
+  overflow: hidden;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 17px;
+  background: var(--background-secondary);
+  box-shadow: none;
+  color: var(--text-normal);
+  font-size: 13.5px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Речь: крупно, чтобы читать с вытянутой руки */
+
+.lt-tr-speakbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.lt-tr-now {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.lt-tr-now.is-late {
+  background: var(--lt-yellow);
+  color: var(--lt-ink);
+}
+
+.lt-root .lt-tr-speakbar button.lt-btn {
+  height: 44px;
+  font-size: 14.5px;
+}
+
+.lt-tr-saypart {
+  margin-bottom: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--background-secondary);
+  scroll-margin-top: 8px;
+}
+
+.lt-tr-saypart.is-now {
+  background: rgba(255, 223, 79, 0.4);
+  box-shadow: inset 0 0 0 2px var(--lt-yellow-line);
+}
+
+.lt-tr-thesis {
+  margin-top: 6px;
+  font-size: 21px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.lt-tr-line {
+  margin-top: 6px;
+  font-size: 19px;
+  line-height: 1.35;
+}
+
+.lt-tr-empty {
+  margin-top: 6px;
+  color: var(--text-faint);
+  font-size: 15px;
+}
+
+.lt-tr-row {
+  margin-top: 7px;
+  font-size: 18px;
+  line-height: 1.35;
+}
+
+.lt-tr-rowlabel {
+  display: block;
+  color: var(--text-muted);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+/* Итог */
+
+.lt-tr-stats {
+  display: grid;
+  gap: 6px;
+}
+
+.lt-tr-stat {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--background-secondary);
+}
+
+.lt-tr-statlabel {
+  flex: 1 1 auto;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.lt-tr-statvalue {
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+}
+
+.lt-tr-statvalue.is-late {
+  padding: 0 6px;
+  border-radius: 6px;
+  background: var(--lt-yellow);
+  color: var(--lt-ink);
+}
+
+.lt-tr-statnote {
+  flex-basis: 100%;
+  color: var(--text-muted);
+  font-size: 13px;
+  text-align: right;
+}
+
+.lt-tr-missing {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* На телефоне снизу плавает панель Obsidian: кнопки и конец списка не должны уходить под неё */
+body.is-mobile .lt-tr-foot {
+  padding-bottom: calc(8px + var(--navbar-height, 0px) + var(--navbar-bottom-offset, 0px));
+}
+
+body.is-mobile .lt-tr-scroll {
+  padding-bottom: calc(24px + var(--navbar-height, 0px) + var(--navbar-bottom-offset, 0px));
+}
+
+/* Призрак блока при переносе виден только во время перетаскивания */
+.lt-ghost.is-shown {
+  display: block;
+}
+
+/* Сразу после открытия поле ввода не ловит нажатия: второе касание не выделит слово */
+.lt-root textarea.lt-guard {
+  pointer-events: none;
+}
