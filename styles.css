@@ -1,3 +1,7 @@
+.workspace-leaf-content .view-content.lt-root {
+  padding: 0;
+}
+
 .lt-root {
   --lt-yellow: #ffdf4f;
   --lt-yellow-line: #d9ac00;
@@ -8,7 +12,6 @@
   --lt-ink: #1d1a0f;
   position: relative;
   height: 100%;
-  padding: 0 !important;
   overflow: hidden;
 }
 
@@ -23,7 +26,6 @@
   touch-action: none;
   position: absolute;
   inset: 0;
-  overflow: hidden;
   overflow: clip;
   background: var(--background-primary);
   cursor: grab;
@@ -395,16 +397,10 @@
   padding-bottom: calc(6px + var(--safe-area-inset-bottom, 0px));
 }
 
-body:has(.workspace-leaf.mod-active .lt-root.lt-hide-nav) .mobile-navbar {
+body.lt-nav-hidden .mobile-navbar {
   opacity: 0;
   transform: translateY(calc(100% + 60px));
   pointer-events: none;
-}
-
-@supports not selector(:has(a)) {
-  .lt-dock {
-    bottom: calc(var(--navbar-height, 0px) + var(--navbar-bottom-offset, 0px));
-  }
 }
 
 .lt-root button.lt-btn {
@@ -474,7 +470,6 @@ body:has(.workspace-leaf.mod-active .lt-root.lt-hide-nav) .mobile-navbar {
   gap: 6px;
   min-width: 0;
   overflow-x: auto;
-  scrollbar-width: none;
 }
 
 .lt-strip-chips::-webkit-scrollbar {
@@ -831,7 +826,7 @@ body:not(.is-mobile) .lt-chip[data-n]::before {
   width: 1px;
   height: 1px;
   overflow: hidden;
-  clip-path: inset(50%);
+  opacity: 0;
   white-space: nowrap;
 }
 
@@ -1008,14 +1003,6 @@ body:not(.is-mobile) .lt-chip[data-n]::before {
   margin-left: auto;
   font-size: 13.5px;
   font-weight: 700;
-}
-
-.lt-is-broken .lt-pill,
-.lt-is-broken .lt-dock,
-.lt-is-broken .lt-strip,
-.lt-is-broken .lt-qpanel,
-.lt-is-broken .lt-wizard {
-  display: none !important;
 }
 
 /* На ПК снизу справа лежит панель состояния Obsidian */

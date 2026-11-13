@@ -2728,6 +2728,7 @@ class LogicTreeView extends TextFileView {
     const root = this.contentEl;
     root.classList.toggle('lt-is-broken', this.broken !== null);
     root.classList.toggle('lt-hide-nav', Boolean(sel || edit || mode));
+    this.plugin.syncNav();
     const focus = this.focusSet();
     this.boxes.forEach((b, id) => {
       b.classList.toggle('is-selected', id === sel && !edit && mode !== 'merge');
@@ -4481,6 +4482,7 @@ class LogicTreePlugin extends obsidian.Plugin {
     this.registerView(VIEW_TYPE, leaf => new LogicTreeView(leaf, this));
     this.registerView(TRAIN_VIEW, leaf => new TrainerView(leaf, this));
     this.registerExtensions([EXTENSION], VIEW_TYPE);
+    this.registerEvent(this.app.workspace.on('active-leaf-change', () => this.syncNav()));
     this.addRibbonIcon('network', tr('Новое дерево'), () => this.createTree());
     this.addRibbonIcon('timer', tr('Тренировка дебатов'), () => this.openTrainer());
     this.addCommand({ id: 'new-tree', name: tr('Новое дерево'), callback: () => this.createTree() });
@@ -4529,9 +4531,17 @@ class LogicTreePlugin extends obsidian.Plugin {
   }
 
   onunload() {
+    activeDocument.body.classList.remove('lt-nav-hidden');
     if (!this.prefsTimer) return;
     window.clearTimeout(this.prefsTimer);
     this.saveData(this.data);
+  }
+
+  // На телефоне панель Obsidian прячется, пока в активном дереве что-то выбрано
+  syncNav() {
+    const view = this.app.workspace.getActiveViewOfType(LogicTreeView);
+    const hide = Boolean(view && view.contentEl.classList.contains('lt-hide-nav'));
+    activeDocument.body.classList.toggle('lt-nav-hidden', hide);
   }
 
   savePrefs() {

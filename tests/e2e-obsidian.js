@@ -602,6 +602,12 @@ const keyboard = async open => {
   await step('Без выбора панель стоит над панелью Obsidian', async () => {
     const g = await ev(`(() => { const nav = document.querySelector('.mobile-navbar').getBoundingClientRect(); const pill = ltFind('.lt-pill').getBoundingClientRect(); return { navTop: nav.top, pillBottom: pill.bottom }; })()`);
     assert.ok(g.pillBottom <= g.navTop, JSON.stringify(g));
+    await sleep(350);
+    assert.strictEqual(await ev(`getComputedStyle(document.querySelector('.mobile-navbar')).opacity`), '1', 'панель Obsidian должна вернуться');
+    assert.strictEqual(await ev(`document.body.classList.contains('lt-nav-hidden')`), false);
+  });
+  await step('У вкладки дерева нет внутренних отступов', async () => {
+    assert.strictEqual(await ev(`getComputedStyle(ltRoot()).padding`), '0px');
   });
   await pill('Вся схема');
   await sleep(320);
@@ -624,6 +630,7 @@ const keyboard = async open => {
     assert.ok(g.dockBottom <= g.h + 1, `кнопки за экраном: низ ${g.dockBottom}, экран ${g.h}`);
     await sleep(350);
     assert.strictEqual(await ev(`getComputedStyle(document.querySelector('.mobile-navbar')).opacity`), '0', 'панель Obsidian должна быть спрятана');
+    assert.strictEqual(await ev(`document.body.classList.contains('lt-nav-hidden')`), true);
     await shot('04-mobile-selected');
   });
   await step('Фокус: своя ветка яркая, соседние бледные', async () => {

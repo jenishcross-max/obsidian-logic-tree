@@ -1,7 +1,7 @@
 {
   "id": "logic-tree",
   "name": "Logic Tree",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "minAppVersion": "1.6.0",
   "description": "Think through decisions, study topics and debate motions as a tree of questions. Guided steps, automatic layout, made for phone and desktop.",
   "author": "jenishcross-max",
